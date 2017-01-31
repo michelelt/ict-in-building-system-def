@@ -69,7 +69,7 @@ def broker_connection(ip, port):
         return
 
         
-    client = mqtt.Client()
+    client = mqtt.Client("controller")
     client.on_connect = on_connect
     client.on_message = on_message
     client.on_publish = on_publish

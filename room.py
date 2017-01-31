@@ -37,10 +37,10 @@ def broker_connection(ip, port):
             m = json.loads(msg.payload)
             print m
             for k in m.keys():
-                Coartificial_lights[k].update_lumen(int(m[k][1]))
+                artificial_lights[k].update_lumen(int(m[k][1]))
 #        print "in message " + str(al1.get_lumen())
 
-    client = mqtt.Client()
+    client = mqtt.Client("room")
     client.on_connect = on_connect
     client.on_subscribe = on_subscribe
     client.on_publish = on_publish
