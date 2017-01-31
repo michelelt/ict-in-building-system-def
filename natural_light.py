@@ -9,9 +9,9 @@ class Natural_light :
 #        self.natural_light = random.randint(0, 1200)
         self.natural_light = 40000
         
-    def get_lux(self):
+    def get_lumen(self):
         return self.natural_light
     
-    def set_lux(self):
+    def set_lumen(self):
         self.natural_light = eval(input('Insert the lux value'))
         return

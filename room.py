@@ -37,8 +37,8 @@ def broker_connection(ip, port):
             m = json.loads(msg.payload)
             print m
             for k in m.keys():
-                artificial_lights[k].update_lux(int(m[k][1]))
-#        print "in message " + str(al1.get_lux())
+                Coartificial_lights[k].update_lumen(int(m[k][1]))
+#        print "in message " + str(al1.get_lumen())
 
     client = mqtt.Client()
     client.on_connect = on_connect
@@ -56,7 +56,7 @@ def sensor_publish(client, my_sensor):
     meas = {}
     meas['id'] = my_sensor.sid
     meas['position'] = my_sensor.position
-    val1 = my_sensor.read_lux(1)
+    val1 = my_sensor.read_lumen(1)
     meas['value'] = val1
     msg = json.dumps(meas)
     client.loop_start()
@@ -71,7 +71,7 @@ if __name__ == "__main__":
     artificial_lights = {
                      's1': al1
                      }
-    al1.set_lux()
+    al1.set_lumen()
     
     my_client = broker_connection(ip,port)
     my_client.subscribe("/room1/commands/")
@@ -80,15 +80,15 @@ if __name__ == "__main__":
         s1w = sensor.Sensor("s1", "w", 1, nl)
         s1t = sensor.Sensor("s1", "t", 1, al1)
         
-        print al1.get_lux()
+        print al1.get_lumen()
             
-#        val1 = s1w.read_lux(1)
-#        val2 = s1t.read_lux(1)
+#        val1 = s1w.read_lumen(1)
+#        val2 = s1t.read_lumen(1)
         time.sleep(1)
         sensor_publish(my_client, s1w)
         sensor_publish(my_client, s1t)
    
-    print s1t.read_lux(1)
+    print s1t.read_lumen(1)
     
 
 

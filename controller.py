@@ -13,6 +13,7 @@ TAB_VAL = 1
 TAB_CNT = 3
 port = 1883
 number_of_sensors=0
+threshold = 6000 #lumen converted
 meas = {}
 
 def analisys_for_nl(meas, sid, position, value):
@@ -21,11 +22,11 @@ def analisys_for_nl(meas, sid, position, value):
         meas[str(sid)][WND_CNT] +=1
 def analisys_for_al(meas, sid, position, value):
     print value
-    if value < 750:
+    if value < threshold:
         #check in class if it is possible
         meas[str(sid)][TAB_VAL] = 20 #increment of 20 lumen
         meas[str(sid)][TAB_CNT] += 1
-    else: #decrement if there are too much lux on table 
+    else: #decrement if there are too much lumen on table 
         meas[str(sid)][TAB_VAL] = -20 #increment of 20 lumen
         meas[str(sid)][TAB_CNT] += 1
 
@@ -48,8 +49,8 @@ def broker_connection(ip, port):
         if m['position'] == 'w':
             analisys_for_nl(meas, m['id'], m['position'], int(m['value']))
         else :
-            lux_value =  int(m['value']) + meas[m['id']][WND_VAL]
-            analisys_for_al(meas, m['id'], m['position'], lux_value) 
+            lumen_value =  int(m['value']) + meas[m['id']][WND_VAL]
+            analisys_for_al(meas, m['id'], m['position'], lumen_value) 
         
         sendable = True
         for key in meas.keys():

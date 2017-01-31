@@ -4,9 +4,9 @@
 import math
 height = 4.05
 Lwall = (3+4.4+12.2+0.8+2.6)*2
-Awall = Lwall * height
+surface_wall = Lwall * height
 
-Aceil = 236
+Aceil  = 236
 Afloor = 236
 
 d1={} #wall, floor, ceil
@@ -20,60 +20,74 @@ d3['max'] = 0.88 #ceil. white piant
 d3['min'] = 0.87
 rho_list = [d1,d2,d3]
 
-internal_surface = [Awall, Aceil, Afloor]
-
-a_tot = sum(internal_surface)
-
+internal_surfaces = [surface_wall, Aceil, Afloor]
+total_internal_surface = sum(internal_surfaces)
 
 epsilon = 0.5 #no obstruction
 
-a_triangle = 1.65*1.65/2
-a_frame = 0.36 #frame of the wnd to remove
+triangle_area = 1.65*1.65/2 #from plates
+frame_area = 0.36           #frame of the wnd to remove, approximation
 
-glass_wnd=[16.5, 14, 9.4] #dimension of windos
-a_wnd = []
+glass_wnd_length=[16.5, 14, 9.4] #length of each glass facade
+net_wnd_surfaces = []
 
-#compute a_wnd
-for length in glass_wnd:
-    a_wnd_gross = height*length
-    number_of_triangles = a_wnd_gross / a_triangle
-    a_wnd_net = a_wnd_gross - (number_of_triangles * a_frame)
-    a_wnd.append(a_wnd_net)
+#compute the net area
+for length in glass_wnd_length:
+    gross_wnd_area = height*length #compute the gross surface  
+    #compute how many triangle shading system are contained in the gross area
+    number_of_triangles = int(gross_wnd_area / triangle_area) 
+    #eliminate the frame area: is the same for all the triangles belongeng at the considered glass facade
+    net_wnd_area = gross_wnd_area - (number_of_triangles * frame_area) 
+    net_wnd_surfaces.append(net_wnd_area)
     
 psi = 1 #approximation
 tau = 0.47 #fino a 0.5 double glass low E
 
 term = 0
-for i,rho in zip(internal_surface, rho_list): #####glass should be considered here
-    term = term + (i*(rho['min']))
-    
-rho_m = float(term/a_tot) #non considerato  vetro, più basso rho
+for surface,rho in zip(internal_surfaces, rho_list): #####glass should be considered here
+    term = term + (surface*(rho['min']))
+rho_m = float(term/total_internal_surface) #non considerato  vetro, più basso rho
 
 num = 0
 for i in range (0,3) : #####glass should be considered here?
-    num = num + tau*a_wnd[i]* epsilon*psi
-nu = num/((1-rho_m)*a_tot)
+    num = num + tau*net_wnd_surfaces[i]* epsilon*psi
+nu = num/((1-rho_m)*total_internal_surface)
+
+
+print "Wall surface = " + str(surface_wall)
+print "Floor Surface = " + str(Afloor)
+print "Ceil Surface = " + str(Aceil)
+print "Glass surface = " + str(sum(glass_wnd_length)*height)
+print "Internal surface = " +  str(sum(internal_surfaces))
+for surface,rho in zip(internal_surfaces, rho_list): 
+    print "rho = " + str(rho["min"]) 
+print "epsilon = " + str(epsilon)
+print "Psi = " + str(psi)
+print "Tau = " + str(tau)
 print "nu = " +str(nu)
+
+print
+
 
 '''
 compute the number of light
 '''
 Em = 750
-A = 8
-
-
+desk_area = 8
 A = 15.2
-#b = 7
 B = 14
-h_first = height - 0.8
+desk_height = 0.8
+h_first = height - desk_height
+lamp_flux = 7000
+U = (0.57+0.63)/2
+M = 0.72 #low dust level
 
+k = A*B / (h_first*(A+B)) #considerare rettangolo
+flux = (Em*desk_area)/(M*U)
+n_light_per_table = math.ceil(flux/lamp_flux)
 
-k = A*B / ((4.05-0.8)*(A+B)) #considerare rettangolo
-print "k = " + str(k)
-u = (0.63+0.71)/2
-print "u = " + str(u)
-
-flux = (Em*A)/(0.67*0.65)
+print "Space index (k) = " + str(k) 
+print "Utilization Factor (U) = " + str(U)
+print "Maintenance Factor (M) = " + str(M)
 print "Phi_tot = " + str(flux)
-n_light_per_table = math.ceil(flux/4100)
-print n_light_per_table
+print "Light per table = " + str(n_light_per_table)

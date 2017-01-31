@@ -20,19 +20,19 @@ class Sensor:
             self.light_source = light
     
         
-    def read_lux(self, mode):
+    def read_lumen(self, mode):
         if self.position == "w":
             if mode == 1 : #preset_value
-                return self.light_source.get_lux()
+                return self.light_source.get_lumen()
             else:
-                return self.light_source.set_lux(2) #user inserction
+                return self.light_source.set_lumen(2) #user inserction
                 
         if self.position == "t":
-            return float(self.light_source.get_lux() / (self.distance*self.distance))
+            return float(self.light_source.get_lumen() / (self.distance*self.distance))
 
     
 #a = al.Artificial_light("a", "a")
-#a.update_lux(20)
-#print a.get_lux()
+#a.update_lumen(20)
+#print a.get_lumen()
     
     

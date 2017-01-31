@@ -18,17 +18,17 @@ class Artificial_light:
         self.name = name
         self.alid = alid
         self.artificial_light=250 #expressed in lumen
-        self.max_lumen = 2700
+        self.max_lumen = 7000
         
-    def get_lux (self):
+    def get_lumen (self):
         return self.artificial_light
         
-    def update_lux(self,value):
+    def update_lumen(self,value):
         new_value = self.artificial_light + value
         if new_value > self.max_lumen or new_value < 0:
             return
         else:   
             self.artificial_light += value
             
-    def set_lux (self):
+    def set_lumen (self):
         self.artificial_light = 740
